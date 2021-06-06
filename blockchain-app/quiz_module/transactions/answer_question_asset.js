@@ -24,6 +24,10 @@ class AnswerQuestionAsset extends BaseAsset {
         const answererAccount = await stateStore.account.get(answererAddress);
 
         if (question.answer === asset.answer) {
+            // remove question from ownQuesitons
+            const ownerQuestionsIndex = questionOwner.question.ownQuestions.findIndex((a) => a.equals(question.id));
+            questionOwner.question.ownQuestions.splice(ownerQuestionsIndex, 1);
+            await stateStore.account.set(questionOwnerAddress, questionOwner);
             // remove question that is correct answer
             questions.splice(questionIndex, 1);
             await setAllQuestions(stateStore, questions);
