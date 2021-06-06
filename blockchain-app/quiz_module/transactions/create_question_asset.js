@@ -31,6 +31,10 @@ class CreateQuestionAsset extends BaseAsset {
             address: senderAddress, 
             amount: asset.reward
         });
+
+        const allQuestions = await getAllQuestions(stateStore);
+        allQuestions.push(question);
+        await setAllQuestions(stateStore, allQuestions);
     }
 }
 

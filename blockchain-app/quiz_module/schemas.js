@@ -18,4 +18,20 @@ const CreateQuestionSchema = {
     },
 };
 
-module.exports = { CreateQuestionSchema };
+const AnswerQuestionSchema = {
+    $id: 'lisk/question/answer',
+    type: 'object',
+    required: ['questionId', 'answer'],
+    properties: {
+        questionId: {
+            datatType: 'bytes',
+            fieldNumber: 1,
+        },
+        answer: {
+            dataType: 'string',
+            fieldNumber: 2,
+        },
+    }
+}
+
+module.exports = { CreateQuestionSchema, AnswerQuestionSchema };
