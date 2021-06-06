@@ -31,7 +31,24 @@ const AnswerQuestionSchema = {
             dataType: 'string',
             fieldNumber: 2,
         },
-    }
-}
+    },
+};
 
-module.exports = { CreateQuestionSchema, AnswerQuestionSchema };
+const QuestionAccountSchema = {
+    type: 'object', 
+    required: ['ownQuestions'],
+    properties: {
+        ownQuestions: {
+            type: 'array', 
+            fieldNumber: 1,
+            items: {
+                datatType: "bytes",
+            },
+        },
+    },
+    default: {
+        ownQuestions: [],
+    },
+};
+
+module.exports = { CreateQuestionSchema, AnswerQuestionSchema, QuestionAccountSchema };
