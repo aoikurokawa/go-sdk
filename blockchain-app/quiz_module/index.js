@@ -18,8 +18,8 @@ class QuizModule extends BaseModule {
     actions = {
         getAllQuestions: async () => getAllQuestionsAsJSON(this._dataAccess),
     };
-        
+
 }
 
-module.exports = QuizModule;
+module.exports = { QuizModule };
 
