@@ -23,6 +23,10 @@ const appConfig = utils.objects.mergeDeep({}, configDevnet, {
 
 const app = Application.defaultApplication(genesisBlockDevnet, appConfig);
 
+app.registerModule(QuizModule);
+app.registerPlugin(HTTPAPIPlugin);
+app.registerPlugin(QuizAPIPlugin);
+
 app
     .run()
     .then(() => app.logger.info("App started..."))
