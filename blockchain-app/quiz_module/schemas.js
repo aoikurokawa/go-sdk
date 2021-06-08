@@ -1,5 +1,5 @@
-const CreateQuestionSchema = {
-    $id: 'lisk/question/create',
+const createQuestionSchema = {
+    $id: 'lisk/quiz/create',
     type: 'object',
     required: ["question", "answer", "reward"],
     properties: {
@@ -18,8 +18,8 @@ const CreateQuestionSchema = {
     },
 };
 
-const AnswerQuestionSchema = {
-    $id: 'lisk/question/answer',
+const answerQuestionSchema = {
+    $id: 'lisk/quiz/answer',
     type: 'object',
     required: ['questionId', 'answer'],
     properties: {
@@ -34,7 +34,7 @@ const AnswerQuestionSchema = {
     },
 };
 
-const QuestionAccountSchema = {
+const questionAccountSchema = {
     type: 'object', 
     required: ['ownQuestions'],
     properties: {
@@ -51,4 +51,4 @@ const QuestionAccountSchema = {
     },
 };
 
-module.exports = { CreateQuestionSchema, AnswerQuestionSchema, QuestionAccountSchema };
+module.exports = { createQuestionSchema, answerQuestionSchema, questionAccountSchema };

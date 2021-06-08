@@ -1,6 +1,6 @@
 const { BaseAsset } = require("lisk-sdk");
 const { getAllQuestions, setAllQuestions } = require("../question");
-const { AnswerQuestionSchema } = require("../schemas");
+const { answerQuestionSchema } = require("../schemas");
 
 class AnswerQuestionAsset extends BaseAsset {
     name = "lisk/question/answer";

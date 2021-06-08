@@ -1,7 +1,7 @@
 const { codec, cryptography } = require("lisk-sdk");
 
 const registeredQuestionSchema = {
-    $id: 'lisk/question/registeredQuestions',
+    $id: 'lisk/quiz/registeredQuestions',
     type: 'object',
     required: ['registeredQuestions'],
     properties: {
@@ -38,7 +38,7 @@ const registeredQuestionSchema = {
     },
 };
 
-const CHAIN_STATE_QUESTION = "nft:registeredQuestions";
+const CHAIN_STATE_QUESTION = "quiz:registeredQuestions";
 
 const createQuestion = ({ question, answer, reward, ownerAddress, nonce }) => {
     const nonceBuffer = Buffer.alloc(8);
