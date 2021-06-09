@@ -33,7 +33,7 @@ class AnswerQuestionAsset extends BaseAsset {
 
             // pay reward to answer account
             await reducerHandler.invoke("token:credit", {
-                address: answererAddress, 
+                address: answererAddress,
                 amount: question.reward
             });
         }

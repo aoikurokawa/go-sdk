@@ -1,6 +1,6 @@
 const { codec, cryptography } = require("lisk-sdk");
 
-const { registeredQuestionSchema } = require("./schemas");
+const { registeredQuizSchema } = require("./schemas");
 
 const CHAIN_STATE_QUESTION = "quiz:registeredQuestions";
 
@@ -25,7 +25,7 @@ const getAllQuestions = async (stateStore) => {
     if (!registeredQuestionsBuffer) {
         return [];
     }
-    const registeredQuestions = codec.decode(registeredQuestionSchema, registeredQuestionsBuffer);
+    const registeredQuestions = codec.decode(registeredQuizSchema, registeredQuestionsBuffer);
 
     return registeredQuestions.registeredQuestions;
 };
@@ -37,9 +37,9 @@ const getAllQuestionsAsJSON = async (dataAccess) => {
         return [];
     }
 
-    const registeredQuestions = codec.decode(registeredQuestionSchema, registeredQuestionsBuffer);
+    const registeredQuestions = codec.decode(registeredQuizSchema, registeredQuestionsBuffer);
 
-    return codec.toJSON(registeredQuestionSchema, registeredQuestions).registeredQuestions;
+    return codec.toJSON(registeredQuizSchema, registeredQuestions).registeredQuestions;
 };
 
 const setAllQuestions = async (stateStore, questions) => {
@@ -49,12 +49,12 @@ const setAllQuestions = async (stateStore, questions) => {
 
     await stateStore.chain.set(
         CHAIN_STATE_QUESTION,
-        codec.encode(registeredQuestionSchema, registeredQuesions),
+        codec.encode(registeredQuizSchema, registeredQuesions),
     );
 };
 
 module.exports = {
-    registeredQuestionSchema,
+    registeredQuestionSchema: registeredQuizSchema,
     CHAIN_STATE_QUESTION,
     createQuestion,
     getAllQuestions,

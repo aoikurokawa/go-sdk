@@ -4,7 +4,7 @@ const createQuizSchema = {
     required: ["question", "answer", "reward"],
     properties: {
         question: {
-            datatType: "string",
+            dataType: "string",
             fieldNumber: 1,
         },
         answer: {
@@ -24,7 +24,7 @@ const answerQuizSchema = {
     required: ['questionId', 'answer'],
     properties: {
         questionId: {
-            datatType: 'bytes',
+            dataType: 'bytes',
             fieldNumber: 1,
         },
         answer: {
@@ -42,7 +42,7 @@ const quizAccountSchema = {
             type: "array", 
             fieldNumber: 1,
             items: {
-                datatType: "bytes",
+                dataType: "bytes",
             },
         },
     },

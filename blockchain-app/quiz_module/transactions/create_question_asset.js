@@ -17,9 +17,9 @@ class CreateQuestionAsset extends BaseAsset {
         const senderAddress = transaction.senderAddress;
         const senderAccount = await stateStore.account.get(senderAddress);
         const question = createQuestion({
-            question: asset.question, 
-            answer: asset.answer, 
-            reward: asset.reward, 
+            question: asset.question,
+            answer: asset.answer,
+            reward: asset.reward,
             ownerAddress: senderAddress,
             nonce: transaction.nonce,
         });
@@ -28,7 +28,7 @@ class CreateQuestionAsset extends BaseAsset {
         await stateStore.account.set(senderAddress, senderAccount);
 
         await reducerHandler.invoke("token:debit", {
-            address: senderAddress, 
+            address: senderAddress,
             amount: asset.reward
         });
 
