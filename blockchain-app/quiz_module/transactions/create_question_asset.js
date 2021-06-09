@@ -3,7 +3,7 @@ const { createQuizSchema } = require('../schemas');
 const { createQuestion, getAllQuestions, setAllQuestions } = require("../question");
 
 class CreateQuestionAsset extends BaseAsset {
-    name = "createQuestion";
+    name = "createQuiz";
     id = 0;
     schema = createQuizSchema;
 

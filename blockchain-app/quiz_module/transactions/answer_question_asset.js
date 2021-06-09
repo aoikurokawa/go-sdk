@@ -3,9 +3,8 @@ const { getAllQuestions, setAllQuestions } = require("../question");
 const { answerQuizSchema } = require("../schemas");
 
 class AnswerQuestionAsset extends BaseAsset {
-    name = "lisk/question/answer";
+    name = "answerQuiz";
     id = 1;
-
     schema = answerQuizSchema;
 
     async apply({ asset, stateStore, reducerHandler, transaction }) {
