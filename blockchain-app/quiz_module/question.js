@@ -1,42 +1,6 @@
 const { codec, cryptography } = require("lisk-sdk");
 
-const registeredQuestionSchema = {
-    $id: 'lisk/quiz/registeredQuestions',
-    type: 'object',
-    required: ['registeredQuestions'],
-    properties: {
-        registeredQuestions: {
-            type: "array",
-            fieldNumber: 1,
-            items: {
-                type: "object",
-                required: ["id", "question", "answer", "reward"],
-                properties: {
-                    id: {
-                        dataType: 'bytes',
-                        fieldNumber: 1,
-                    },
-                    question: {
-                        dataType: 'string',
-                        fieldNumber: 2,
-                    },
-                    answer: {
-                        dataType: 'string',
-                        fieldNumber: 3,
-                    },
-                    reward: {
-                        dataType: 'uint64',
-                        fieldNumber: 4,
-                    },
-                    ownerAddress: {
-                        dataType: 'bytes',
-                        fieldNumber: 5,
-                    },
-                },
-            },
-        },
-    },
-};
+const { registeredQuestionSchema } = require("./schemas");
 
 const CHAIN_STATE_QUESTION = "quiz:registeredQuestions";
 
@@ -60,7 +24,7 @@ const getAllQuestions = async (stateStore) => {
     const registeredQuestionsBuffer = await stateStore.chain.get(CHAIN_STATE_QUESTION);
     if (!registeredQuestionsBuffer) {
         return [];
-    }   
+    }
     const registeredQuestions = codec.decode(registeredQuestionSchema, registeredQuestionsBuffer);
 
     return registeredQuestions.registeredQuestions;
@@ -84,17 +48,17 @@ const setAllQuestions = async (stateStore, questions) => {
     };
 
     await stateStore.chain.set(
-        CHAIN_STATE_QUESTION, 
+        CHAIN_STATE_QUESTION,
         codec.encode(registeredQuestionSchema, registeredQuesions),
     );
 };
 
 module.exports = {
-    registeredQuestionSchema, 
+    registeredQuestionSchema,
     CHAIN_STATE_QUESTION,
-    createQuestion, 
-    getAllQuestions, 
-    getAllQuestionsAsJSON, 
+    createQuestion,
+    getAllQuestions,
+    getAllQuestionsAsJSON,
     setAllQuestions
 };
 

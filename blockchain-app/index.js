@@ -30,7 +30,8 @@ app.registerPlugin(QuizAPIPlugin);
 app
     .run()
     .then(() => app.logger.info("App started..."))
-    .catch((error) => {
-        console.error("error", error);
+    .catch(() => {
+        console.error();
+        // process.exit(1);
     });
 

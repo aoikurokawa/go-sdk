@@ -1,12 +1,12 @@
 const { BaseAsset } = require("lisk-sdk");
 const { getAllQuestions, setAllQuestions } = require("../question");
-const { answerQuestionSchema } = require("../schemas");
+const { answerQuizSchema } = require("../schemas");
 
 class AnswerQuestionAsset extends BaseAsset {
     name = "lisk/question/answer";
     id = 1;
 
-    schema = AnswerQuestionAsset;
+    schema = answerQuizSchema;
 
     async apply({ asset, stateStore, reducerHandler, transaction }) {
         const questions = await getAllQuestions(stateStore);

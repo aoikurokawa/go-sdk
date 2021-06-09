@@ -1,5 +1,5 @@
 const { BaseModule } = require("lisk-sdk");
-const { questionAccountSchema } = require("./schemas");
+const { quizAccountSchema } = require("./schemas");
 const { getAllQuestionsAsJSON } = require("./question");
 
 const CreateQueestionAsset = require("./transactions/create_question_asset");
@@ -8,7 +8,7 @@ const AnswerQuestionAsset = require("./transactions/answer_question_asset");
 class QuizModule extends BaseModule {
     name = "question";
     id = 1024;
-    accountSchema = questionAccountSchema;
+    accountSchema = quizAccountSchema;
 
     transactionAssets = [
         new CreateQueestionAsset(),

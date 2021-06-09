@@ -1,11 +1,11 @@
 const { BaseAsset } = require("lisk-sdk");
-const { createQuestionSchema } = require('../schemas');
+const { createQuizSchema } = require('../schemas');
 const { createQuestion, getAllQuestions, setAllQuestions } = require("../question");
 
 class CreateQuestionAsset extends BaseAsset {
     name = "createQuestion";
     id = 0;
-    schema = createQuestionSchema;
+    schema = createQuizSchema;
 
     validate({ asset }) {
         if (asset.reward <= 0) {

@@ -1,4 +1,4 @@
-const createQuestionSchema = {
+const createQuizSchema = {
     $id: 'lisk/quiz/create',
     type: 'object',
     required: ["question", "answer", "reward"],
@@ -18,9 +18,9 @@ const createQuestionSchema = {
     },
 };
 
-const answerQuestionSchema = {
+const answerQuizSchema = {
     $id: 'lisk/quiz/answer',
-    type: 'object',
+    type: "object",
     required: ['questionId', 'answer'],
     properties: {
         questionId: {
@@ -34,12 +34,12 @@ const answerQuestionSchema = {
     },
 };
 
-const questionAccountSchema = {
-    type: 'object', 
-    required: ['ownQuestions'],
+const quizAccountSchema = {
+    type: "object", 
+    required: ["ownQuizzes"],
     properties: {
-        ownQuestions: {
-            type: 'array', 
+        ownQuizzes: {
+            type: "array", 
             fieldNumber: 1,
             items: {
                 datatType: "bytes",
@@ -47,8 +47,46 @@ const questionAccountSchema = {
         },
     },
     default: {
-        ownQuestions: [],
+        ownQuizzes: [],
     },
 };
 
-module.exports = { createQuestionSchema, answerQuestionSchema, questionAccountSchema };
+const registeredQuizSchema = {
+    $id: 'lisk/quiz/registeredQuestions',
+    type: 'object',
+    required: ['registeredQuestions'],
+    properties: {
+        registeredQuestions: {
+            type: "array",
+            fieldNumber: 1,
+            items: {
+                type: "object",
+                required: ["id", "question", "answer", "reward"],
+                properties: {
+                    id: {
+                        dataType: 'bytes',
+                        fieldNumber: 1,
+                    },
+                    question: {
+                        dataType: 'string',
+                        fieldNumber: 2,
+                    },
+                    answer: {
+                        dataType: 'string',
+                        fieldNumber: 3,
+                    },
+                    reward: {
+                        dataType: 'uint64',
+                        fieldNumber: 4,
+                    },
+                    ownerAddress: {
+                        dataType: 'bytes',
+                        fieldNumber: 5,
+                    },
+                },
+            },
+        },
+    },
+};
+
+module.exports = { createQuizSchema, answerQuizSchema, quizAccountSchema, registeredQuizSchema };
