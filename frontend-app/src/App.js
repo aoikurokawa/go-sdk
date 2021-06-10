@@ -20,6 +20,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import AddIcon from "@material-ui/icons/Add";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import * as api from './api';
 import { nodeInfoContextDefaultValue, NodeInfoContext } from "./context";
 
 import './App.css';
@@ -48,6 +49,14 @@ function App() {
   const [nodeInfoState, updateNodeInfoState] = useState(nodeInfoContextDefaultValue);
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
   const [openDialog, setOpenDialog] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const info = await api.fetchNodeInfo();
+      console.log(info.networkIdentifier);
+    }
+    fetchData();
+  }, []);
 
   const handleSpeedDialClose = () => {
     setOpenSpeedDial(false);
