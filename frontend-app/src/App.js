@@ -15,20 +15,23 @@ import {
   Chip,
   Icon
 } from "@material-ui/core";
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
+import AddIcon from "@material-ui/icons/Add";
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { nodeInfoContextDefaultValue, NodeInfoContext } from "./context";
 
 import './App.css';
 
 const useStyles = makeStyles((theme) => ({
   appBarLink: {
-    margin: theme.spacing(0, 2), 
+    margin: theme.spacing(0, 2),
     flex: 1,
   },
   speedDial: {
-    position: 'absolute', 
-    bottom: theme.spacing(2), 
+    position: 'absolute',
+    bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
   contentContainer: {
@@ -39,6 +42,16 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [nodeInfoState, updateNodeInfoState] = useState(nodeInfoContextDefaultValue);
+  const [openSpeedDial, setOpenSpeedDial] = useState(false);
+  const [openDialog, setOpenDialog] = useState(null);
+
+  const handleSpeedDialClose = () => {
+    setOpenSpeedDial(false);
+  }
+
+  const handleSpeedDialOpen = () => {
+    setOpenSpeedDial(true);
+  }
   return (
     <Fragment>
       <NodeInfoContext.Provider value={nodeInfoState}>
@@ -71,7 +84,37 @@ function App() {
             </Toolbar>
           </AppBar>
 
-          
+          <SpeedDial
+            ariaLabel="SpeedDial example"
+            color="secondary"
+            className={classes.speedDial}
+            icon={<SpeedDialIcon />}
+            onClose={handleSpeedDialClose}
+            onOpen={handleSpeedDialOpen}
+            open={openSpeedDial}
+            direction="up"
+          >
+            <SpeedDialAction
+              key={'Create NFT'}
+              icon={<AddPhotoAlternateIcon />}
+              tooltipTitle={'Create QUIZ'}
+              onClick={() => {
+                setOpenSpeedDial(false);
+                setOpenDialog('CreateQuizDialog');
+              }}
+            />
+
+            <SpeedDialAction
+              key={'Create Account'}
+              icon={<AddIcon />}
+              tooltipTitle={'Create Account'}
+              onClick={() => {
+                setOpenSpeedDial(false);
+                setOpenDialog('CreateAccountDialog');
+              }}
+            />
+
+          </SpeedDial>
         </Router>
 
       </NodeInfoContext.Provider>
