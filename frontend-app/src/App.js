@@ -128,7 +128,6 @@ function App() {
             </Switch>
           </Container>
         </Router>
-
       </NodeInfoContext.Provider>
       <div className="App">
 
