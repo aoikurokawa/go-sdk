@@ -26,6 +26,7 @@ import './App.css';
 import HomePage from "./pages/HomePage";
 import AccountPage from "./pages/AccountPage";
 import TransactionsPage from "./pages/TransactionsPage";
+import CreateAccountDialog from './components/dialogs/CreateAccountDialog';
 
 const useStyles = makeStyles((theme) => ({
   appBarLink: {
@@ -98,7 +99,7 @@ function App() {
             direction="up"
           >
             <SpeedDialAction
-              key={'Create NFT'}
+              key={'Create Quiz'}
               icon={<AddPhotoAlternateIcon />}
               tooltipTitle={'Create QUIZ'}
               onClick={() => {
@@ -124,14 +125,18 @@ function App() {
                 <HomePage />
               </Route>
               <Route path="accounts/:address" component={AccountPage} />
-              <Route path="transactions" component={TransactionsPage} />  
+              <Route path="transactions" component={TransactionsPage} />
             </Switch>
           </Container>
+
+          <CreateAccountDialog
+            open={openDialog === 'CreateAccountDialog'}
+            handleClose={() => {
+              setOpenDialog(null);
+            }}
+          />
         </Router>
       </NodeInfoContext.Provider>
-      <div className="App">
-
-      </div>
     </Fragment>
 
   );
