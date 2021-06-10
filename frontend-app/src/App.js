@@ -23,6 +23,9 @@ import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { nodeInfoContextDefaultValue, NodeInfoContext } from "./context";
 
 import './App.css';
+import HomePage from "./pages/HomePage";
+import AccountPage from "./pages/AccountPage";
+import TransactionsPage from "./pages/TransactionsPage";
 
 const useStyles = makeStyles((theme) => ({
   appBarLink: {
@@ -115,6 +118,15 @@ function App() {
             />
 
           </SpeedDial>
+          <Container className={classes.contentContainer}>
+            <Switch>
+              <Route path="/" exact>
+                <HomePage />
+              </Route>
+              <Route path="accounts/:address" component={AccountPage} />
+              <Route path="transactions" component={TransactionsPage} />  
+            </Switch>
+          </Container>
         </Router>
 
       </NodeInfoContext.Provider>
