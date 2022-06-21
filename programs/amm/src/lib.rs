@@ -140,7 +140,7 @@ impl Game {
 pub mod amm {
     use super::*;
 
-    pub fn initialize(ctx: Context<SetupGame>, player_two: Pubkey) -> Result<()> {
+    pub fn setup_game(ctx: Context<SetupGame>, player_two: Pubkey) -> Result<()> {
         ctx.accounts
             .game
             .start([ctx.accounts.player_one.key(), player_two])
