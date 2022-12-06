@@ -141,6 +141,24 @@ func (game *Game) ValidJump(src, dst Pos) bool {
 	}
 }
 
+func (game *Game) kingPiece(dst Pos) {
+	if !game.PieceAt(dst) {
+		return
+	}
+	piece := game.Pieces[dst]
+	if (dst.Y == 0 && piece.Player == RED_PLAYER) || (dst.Y == BOARD_DIM-1 && piece.Player == BLACK_PLAYER) {
+		piece.King = true
+		game.Pieces[dst] = piece
+	}
+}
+
+func (game *Game) updateTurn(dst Pos, jumped bool) {
+	opponent := Opponents[game.Turn]
+	if (!jumped || !game.jumpPossibleFrom(dst)) && game.playerHasMove(opponent) {
+		game.Turn = opponent
+	}
+}
+
 func (game *Game) jumpPossibleFrom(src Pos) bool {
 	if !game.PieceAt(src) {
 		return false
@@ -164,6 +182,36 @@ func (game *Game) jumpPossibleFrom(src Pos) bool {
 	return false
 }
 
+func (game *Game) movePossibleFrom(src Pos) bool {
+	if !game.PieceAt(src) {
+		return false
+	}
+	piece := game.Pieces[src]
+	if !piece.King {
+		for dst := range Moves[piece.Player][src] {
+			if game.ValidMove(src, dst) {
+				return true
+			}
+		}
+	} else {
+		for dst := range KingMoves[src] {
+			if game.ValidMove(src, dst) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (game *Game) playerHasMove(player Player) bool {
+	for loc, piece := range game.Pieces {
+		if piece.Player == player && (game.movePossibleFrom(loc) || game.jumpPossibleFrom(loc)) {
+			return true
+		}
+	}
+	return false
+}
+
 func (game *Game) playerHasJump(player Player) bool {
 	for loc, piece := range game.Pieces {
 		if piece.Player == player && game.jumpPossibleFrom(loc) {
@@ -176,6 +224,39 @@ func (game *Game) playerHasJump(player Player) bool {
 func (game *Game) PieceAt(pos Pos) bool {
 	_, ok := game.Pieces[pos]
 	return ok
+}
+
+func (game *Game) TurnIs(player Player) bool {
+	return game.Turn == player
+}
+
+func (game *Game) Move(src, dst Pos) (captured Pos, err error) {
+	captured = NO_POS
+	err = nil
+	if !game.PieceAt(src) {
+		return NO_POS, errors.New(fmt.Sprintf("No piece at source position: %v", src))
+	}
+	if game.PieceAt(dst) {
+		return NO_POS, errors.New(fmt.Sprintf("Already piece at destination position: %v", dst))
+	}
+	if !game.TurnIs(game.Pieces[src].Player) {
+		return NO_POS, errors.New(fmt.Sprintf("Not: %v's turn", game.Pieces[src].Player))
+	}
+	if !game.ValidMove(src, dst) {
+		return NO_POS, errors.New(fmt.Sprintf("Invalid move: %v to %v", src, dst))
+	}
+	if game.ValidJump(src, dst) {
+		game.Pieces[dst] = game.Pieces[src]
+		delete(game.Pieces, src)
+		captured = Capture(src, dst)
+		delete(game.Pieces, captured)
+	} else {
+		game.Pieces[dst] = game.Pieces[src]
+		delete(game.Pieces, src)
+	}
+	game.updateTurn(dst, captured != NO_POS)
+	game.kingPiece(dst)
+	return
 }
 
 func (game *Game) String() string {
