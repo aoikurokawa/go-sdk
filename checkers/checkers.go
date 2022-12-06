@@ -1,5 +1,12 @@
 package checkers
 
+import (
+	"bytes"
+	"errors"
+	"fmt"
+	"strings"
+)
+
 const (
 	BOARD_DIM = 8
 	RED       = "red"
@@ -25,10 +32,10 @@ var PieceStrings = map[Player]string{
 var NO_PIECE = Piece{NO_PLAYER, false}
 
 var StringPieces = map[string]Piece{
-	"r": Piece{RED_PLAYER, false},
-	"b": Piece{BLACK_PLAYER, false},
-	"R": Piece{RED_PLAYER, true},
-	"B": Piece{BLACK_PLAYER, true},
+	"r": {RED_PLAYER, false},
+	"b": {BLACK_PLAYER, false},
+	"R": {RED_PLAYER, true},
+	"B": {BLACK_PLAYER, true},
 	"*": NO_PIECE,
 }
 
@@ -102,4 +109,63 @@ func init() {
 			}
 		}
 	}
+}
+
+type Game struct {
+	Pieces map[Pos]Piece
+	Turn   Player
+}
+
+func (game *Game) PieceAt(pos Pos) bool {
+	_, ok := game.Pieces[pos]
+	return ok
+}
+
+func (game *Game) String() string {
+	var buf bytes.Buffer
+	for y := 0; y < BOARD_DIM; y++ {
+		for x := 0; x < BOARD_DIM; x++ {
+			pos := Pos{x, y}
+			if game.PieceAt(pos) {
+				piece := game.Pieces[pos]
+				val := PieceStrings[piece.Player]
+				if piece.King {
+					val = strings.ToUpper(val)
+				}
+				buf.WriteString(val)
+			} else {
+				buf.WriteString(PieceStrings[NO_PLAYER])
+			}
+		}
+		if y < (BOARD_DIM - 1) {
+			buf.WriteString(ROW_SEP)
+		}
+	}
+	return buf.String()
+}
+
+func ParsePiece(s string) (Piece, bool) {
+	piece, ok := StringPieces[s]
+	return piece, ok
+}
+
+func Parse(s string) (*Game, error) {
+	if len(s) != BOARD_DIM*BOARD_DIM+(BOARD_DIM-1) {
+		return nil, errors.New(fmt.Sprintf("invalid board string: %v", s))
+	}
+	pieces := make(map[Pos]Piece)
+	result := &Game{pieces, BLACK_PLAYER}
+	for y, row := range strings.Split(s, ROW_SEP) {
+		for x, c := range strings.Split(row, "") {
+			if x >= BOARD_DIM || y >= BOARD_DIM {
+				return nil, errors.New(fmt.Sprintf("invalid board, piece out of bounds: %v, %v", x, y))
+			}
+			if piece, ok := ParsePiece(c); !ok {
+				return nil, errors.New(fmt.Sprintf("invalid board, piece out of bounds: %v, %v", x, y))
+			} else if piece != NO_PIECE {
+				result.Pieces[Pos{x, y}] = piece
+			}
+		}
+	}
+	return result, nil
 }
