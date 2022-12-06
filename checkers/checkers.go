@@ -116,6 +116,63 @@ type Game struct {
 	Turn   Player
 }
 
+func (game *Game) ValidMove(src, dst Pos) bool {
+	if !game.PieceAt(src) || game.PieceAt(dst) {
+		return false
+	}
+	piece := game.Pieces[src]
+	if (!piece.King && Moves[piece.Player][src][dst]) || (piece.King && KingMoves[src][dst]) {
+		// return !game.
+	}
+	return game.ValidJump(src, dst)
+}
+
+func (game *Game) ValidJump(src, dst Pos) bool {
+	if !game.PieceAt(src) || game.PieceAt(dst) {
+		return false
+	}
+	piece := game.Pieces[src]
+	if !piece.King {
+		capLoc, jumpOk := Jumps[piece.Player][src][dst]
+		return jumpOk && game.PieceAt(capLoc) && game.Pieces[capLoc].Player == Opponents[piece.Player]
+	} else {
+		capLoc, kingJumpOk := KingJumps[src][dst]
+		return kingJumpOk && game.PieceAt(capLoc) && game.Pieces[capLoc].Player == Opponents[piece.Player]
+	}
+}
+
+func (game *Game) jumpPossibleFrom(src Pos) bool {
+	if !game.PieceAt(src) {
+		return false
+	}
+	piece := game.Pieces[src]
+	if !piece.King {
+		// enumerate all player jumps and return true if one is valid
+		for dst := range Jumps[piece.Player][src] {
+			if game.ValidJump(src, dst) {
+				return true
+			}
+		}
+	} else {
+		// enumerate all king jumps and return true if one is valid
+		for dst := range KingJumps[src] {
+			if game.ValidJump(src, dst) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (game *Game) playerHasJump(player Player) bool {
+	for loc, piece := range game.Pieces {
+		if piece.Player == player && game.jumpPossibleFrom(loc) {
+			return true
+		}
+	}
+	return false
+}
+
 func (game *Game) PieceAt(pos Pos) bool {
 	_, ok := game.Pieces[pos]
 	return ok
