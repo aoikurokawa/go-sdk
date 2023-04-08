@@ -127,7 +127,7 @@ contract ERC721 is IERC721 {
         return (spender == owner || isApprovedForAll[owner][spender] || spender == _approvals[id]);
     }
 
-    function _mint(address to, uint id) internal {
+    function _mint(address to, uint id) external {
         require(to != address(0), "mint to zero address");
         require(_ownerOf[id] == address(0), "already minted");
 
@@ -137,7 +137,7 @@ contract ERC721 is IERC721 {
         emit Transfer(address(0), to, id);
     }
 
-    function _burn(uint id) internal {
+    function _burn(uint id) external {
         address owner = _ownerOf[id];
         require(owner != address(0), "not minted");
 
@@ -150,13 +150,13 @@ contract ERC721 is IERC721 {
     }
 }
 
-contract MyNFT is ERC721 {
-    function mint(address to, uint id) external {
-        _mint(to, id);
-    }
-
-    function burn(uint id) external {
-        require(msg.sender == _ownerOf[id], "not owner");
-        _burn(id);
-    }
-}
+// contract MyNFT is ERC721 {
+//     function mint(address to, uint id) external {
+//         _mint(to, id);
+//     }
+// 
+//     function burn(uint id) external {
+//         require(msg.sender == _ownerOf[id], "not owner");
+//         _burn(id);
+//     }
+// }
