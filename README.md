@@ -1,4 +1,4 @@
-# Impelementing Programming Bitcoin
+# Go SDK
 
 ## Test
 ```python
