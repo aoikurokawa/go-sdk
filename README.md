@@ -4,11 +4,17 @@
 
 ### Restaking
 
-#### Config
+1. Config
 
-#### Ncn
+2. Ncn
 
-#### NcnOperatorState
+3. NcnOperatorState
+
+4. NcnVaultTicket
+
+5. Operator
+
+6. OperatorVaultTicket
 
 ## Example
 
