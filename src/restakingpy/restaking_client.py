@@ -15,29 +15,25 @@ class RestakingClient:
 
     def get_restaking_config(self) -> typing.Optional[Config]:
         config_account_pubkey, _, _ = Config.find_program_address(self.restaking_program_id)
-        print(config_account_pubkey)
 
         try:
             response = self.http_client.get_account_info(config_account_pubkey)
 
             # Check if account data exists
-            # if response['result']['value'] is None:
-            #     print("Account data not found.")
-            #     return None
-            
-            
-            
+            if response.value is None:
+                print("Account data not found.")
+                return None
+
             # Deserialize the account data
             # This assumes `data` in response is base64 encoded; decode and parse as needed
-            print(response)
-            data = response['result']['value']['data'][0]
-            # decoded_data = bytes(data)  # Convert data to bytes, as needed for decoding
-            return None
+            data = response.value.data
+            decoded_data = bytes(data)  # Convert data to bytes, as needed for decoding
+
             # # Deserialize into Config object (this part depends on how Config is stored)
             # # For example purposes, assume you have a method in Config to parse raw bytes
-            # config = Config.from_bytes(decoded_data)
+            config = Config.deserialize(decoded_data)
 
-            # return config
+            return config
         
         except Exception as e:
             print("An error occured:", e)

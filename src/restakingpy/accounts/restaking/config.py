@@ -2,6 +2,7 @@ import typing
 from solders.pubkey import Pubkey
 
 class Config:
+
     discriminator: typing.ClassVar = 0
     admin: Pubkey
     vaultProgram:Pubkey
@@ -9,17 +10,65 @@ class Config:
     operatorCount: int
     epochLength: int
     bump: int
-    reserved: list[int]
 
     # Initialize a Config instance with required attributes
-    def __init__(self, admin: Pubkey, vaultProgram: Pubkey, ncnCount: int, operatorCount: int, epochLength: int, bump: int, reserved: list[int]):
+    def __init__(self, admin: Pubkey, vaultProgram: Pubkey, ncnCount: int, operatorCount: int, epochLength: int, bump: int):
         self.admin = admin
         self.vaultProgram = vaultProgram
         self.ncnCount = ncnCount
         self.operatorCount = operatorCount
         self.epochLength = epochLength
         self.bump = bump
-        self.reserved = reserved
+
+    # Display Config
+    def __str__(self):
+        return (
+            f"Config(\n"
+            f"  admin={self.admin},\n"
+            f"  vaultProgram={self.vaultProgram},\n"
+            f"  ncnCount={self.ncnCount},\n"
+            f"  operatorCount={self.operatorCount},\n"
+            f"  epochLength={self.epochLength},\n"
+            f"  bump={self.bump},\n"
+            f")"
+        )
+
+    def deserialize(data: bytes) -> "Config":
+        """Deserializes bytes into a Config instance."""
+        
+        # Define offsets for each field
+        offset = 0
+
+        # Unpack admin and vaultProgram (32 bytes each)
+        admin = Pubkey.from_bytes(data[offset:offset + 32])
+        offset += 32
+        vaultProgram = Pubkey.from_bytes(data[offset:offset + 32])
+        offset += 32
+
+        # NCN count
+        ncnCount = int.from_bytes(data[offset:offset + 8])
+        offset += 8
+        
+        # Operator count
+        operatorCount = int.from_bytes(data[offset:offset + 8])
+        offset += 8
+
+        # Epoch length
+        epochLength = int.from_bytes(data[offset:offset + 8])
+        offset += 8
+
+        # Bump
+        bump = int.from_bytes(data[offset:offset + 1])
+
+        # Return a new Config instance with the deserialized data
+        return Config(
+            admin=admin,
+            vaultProgram=vaultProgram,
+            ncnCount=ncnCount,
+            operatorCount=operatorCount,
+            epochLength=epochLength,
+            bump=bump,
+        )
 
     @staticmethod
     def seeds() -> typing.List[bytes]:
