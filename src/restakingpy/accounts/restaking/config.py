@@ -5,19 +5,19 @@ class Config:
 
     discriminator: typing.ClassVar = 0
     admin: Pubkey
-    vaultProgram:Pubkey
-    ncnCount: int
-    operatorCount: int
-    epochLength: int
+    vault_program:Pubkey
+    ncn_count: int
+    operator_count: int
+    epoch_length: int
     bump: int
 
     # Initialize a Config instance with required attributes
-    def __init__(self, admin: Pubkey, vaultProgram: Pubkey, ncnCount: int, operatorCount: int, epochLength: int, bump: int):
+    def __init__(self, admin: Pubkey, vault_program: Pubkey, ncn_count: int, operator_count: int, epoch_length: int, bump: int):
         self.admin = admin
-        self.vaultProgram = vaultProgram
-        self.ncnCount = ncnCount
-        self.operatorCount = operatorCount
-        self.epochLength = epochLength
+        self.vault_program = vault_program
+        self.ncn_count = ncn_count
+        self.operator_count = operator_count
+        self.epoch_length = epoch_length
         self.bump = bump
 
     # Display Config
@@ -25,36 +25,38 @@ class Config:
         return (
             f"Config(\n"
             f"  admin={self.admin},\n"
-            f"  vaultProgram={self.vaultProgram},\n"
-            f"  ncnCount={self.ncnCount},\n"
-            f"  operatorCount={self.operatorCount},\n"
-            f"  epochLength={self.epochLength},\n"
+            f"  vault_program={self.vault_program},\n"
+            f"  ncn_count={self.ncn_count},\n"
+            f"  operator_count={self.operator_count},\n"
+            f"  epoch_length={self.epoch_length},\n"
             f"  bump={self.bump},\n"
             f")"
         )
 
+    @staticmethod
     def deserialize(data: bytes) -> "Config":
         """Deserializes bytes into a Config instance."""
         
         # Define offsets for each field
         offset = 0
+        offset += 8
 
         # Unpack admin and vaultProgram (32 bytes each)
         admin = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
-        vaultProgram = Pubkey.from_bytes(data[offset:offset + 32])
+        vault_program = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
 
         # NCN count
-        ncnCount = int.from_bytes(data[offset:offset + 8])
+        ncn_count = int.from_bytes(data[offset:offset + 8], byteorder='little')
         offset += 8
         
         # Operator count
-        operatorCount = int.from_bytes(data[offset:offset + 8])
+        operator_count = int.from_bytes(data[offset:offset + 8], byteorder='little')
         offset += 8
 
         # Epoch length
-        epochLength = int.from_bytes(data[offset:offset + 8])
+        epoch_length = int.from_bytes(data[offset:offset + 8], byteorder='little')
         offset += 8
 
         # Bump
@@ -62,12 +64,12 @@ class Config:
 
         # Return a new Config instance with the deserialized data
         return Config(
-            admin=admin,
-            vaultProgram=vaultProgram,
-            ncnCount=ncnCount,
-            operatorCount=operatorCount,
-            epochLength=epochLength,
-            bump=bump,
+            admin,
+            vault_program,
+            ncn_count,
+            operator_count,
+            epoch_length,
+            bump
         )
 
     @staticmethod
