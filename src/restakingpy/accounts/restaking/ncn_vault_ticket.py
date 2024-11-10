@@ -4,41 +4,38 @@ from solders.pubkey import Pubkey
 
 from restakingpy.accounts.core.slot_toggle import SlotToggle
 
-class NcnOperatorState:
+class NcnVaultTicket:
 
-    discriminator: typing.ClassVar = 4
+    discriminator: typing.ClassVar = 6
     ncn: Pubkey
-    operator:Pubkey
+    vault:Pubkey
     index: int
-    ncn_opt_in_state: SlotToggle
-    operator_opt_in_state: SlotToggle
+    state: SlotToggle
     bump: int
 
-    # Initialize a NcnOperatorState instance with required attributes
-    def __init__(self, ncn: Pubkey, operator: Pubkey, index: int, ncn_opt_in_state: SlotToggle, operator_opt_in_state: SlotToggle, bump: int):
+    # Initialize a NcnVaultTicket instance with required attributes
+    def __init__(self, ncn: Pubkey, vault: Pubkey, index: int, state: SlotToggle, bump: int):
         self.ncn = ncn
-        self.operator = operator
+        self.vault = vault
         self.index = index
-        self.ncn_opt_in_state = ncn_opt_in_state
-        self.operator_opt_in_state = operator_opt_in_state
+        self.state = state
         self.bump = bump
 
-    # Display Config
+    # Display NcnVaultTicket
     def __str__(self):
         return (
-            f"NcnOperatorState(\n"
+            f"NcnVaultTicket(\n"
             f"  ncn={self.ncn},\n"
-            f"  operator={self.operator},\n"
+            f"  vault={self.vault},\n"
             f"  index={self.index},\n"
-            f"  ncn_opt_in_state={self.ncn_opt_in_state},\n"
-            f"  operator_opt_in_state={self.operator_opt_in_state},\n"
+            f"  state={self.state},\n"
             f"  bump={self.bump},\n"
             f")"
         )
 
     @staticmethod
-    def deserialize(data: bytes) -> "NcnOperatorState":
-        """Deserializes bytes into a NcnOperatorState instance."""
+    def deserialize(data: bytes) -> "NcnVaultTicket":
+        """Deserializes bytes into a NcnVaultTicket instance."""
         
         # Define offsets for each field
         offset = 0
@@ -46,41 +43,36 @@ class NcnOperatorState:
 
         ncn = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
-        operator = Pubkey.from_bytes(data[offset:offset + 32])
+        vault = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
 
         index = int.from_bytes(data[offset:offset + 8], byteorder='little')
         offset += 8
         
-
-        ncn_opt_in_state = SlotToggle.deserialize(data[offset:offset + 8 + 8 + 32])
-        offset += 8 + 8 + 32
-
-        operator_opt_in_state = SlotToggle.deserialize(data[offset:offset + 8 + 8 + 32])
+        state = SlotToggle.deserialize(data[offset:offset + 8 + 8 + 32])
         offset += 8 + 8 + 32
 
         # Bump
         bump = int.from_bytes(data[offset:offset + 1])
 
         # Return a new Config instance with the deserialized data
-        return NcnOperatorState(
+        return NcnVaultTicket(
             ncn,
-            operator,
+            vault,
             index,
-            ncn_opt_in_state,
-            operator_opt_in_state,
+            state,
             bump
         )
 
     @staticmethod
-    def seeds(ncn: Pubkey, operator: Pubkey) -> typing.List[bytes]:
+    def seeds(ncn: Pubkey, vault: Pubkey) -> typing.List[bytes]:
         """Return the seeds used for generating PDA."""
-        return [b"ncn_operator_state", bytes(ncn), bytes(operator)]
+        return [b"ncn_vault_ticket", bytes(ncn), bytes(vault)]
     
     @staticmethod
     def find_program_address(program_id: Pubkey, ncn: Pubkey, operator: Pubkey) -> typing.Tuple[Pubkey, int, typing.List[bytes]]:
         """Finds the program-derived address (PDA) for the given seeds and program ID."""
-        seeds = NcnOperatorState.seeds(ncn, operator)
+        seeds = NcnVaultTicket.seeds(ncn, operator)
         
         # Compute PDA and bump using seeds (requires solders Pubkey functionality)
         pda, bump = Pubkey.find_program_address(seeds, program_id)

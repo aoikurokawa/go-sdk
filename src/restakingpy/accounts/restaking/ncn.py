@@ -127,7 +127,6 @@ class Ncn:
         offset = 0
         offset = 8
 
-        # Unpack admin and vaultProgram (32 bytes each)
         base = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
         admin = Pubkey.from_bytes(data[offset:offset + 32])
