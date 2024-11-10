@@ -1,5 +1,6 @@
-from solders.pubkey import Pubkey
 import typing
+
+from solders.pubkey import Pubkey
 
 class Ncn:
     """
