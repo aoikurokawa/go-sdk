@@ -5,6 +5,40 @@ from solders.pubkey import Pubkey
 from restakingpy.accounts.core.slot_toggle import SlotToggle
 
 class NcnVaultTicket:
+    """
+    This ticket represents the relationship between an NCN and a Vault. It is created by the NCN to opt in to work with a Vault.
+
+    ...
+
+    Attributes
+    ----------
+    ncn : Pubkey
+        The NCN
+    
+    vault : Pubkey
+        The vault account
+
+    index : int
+        The index of NcnVaultTicket
+
+    state : SlotToggle
+        The state of NcnVaultTicket ()
+
+    bump : int
+        The bump seed for the PDA
+
+
+    Methods
+    -------
+    deserialize(data: bytes)
+        Deserialize the account data to NcnVaultTicket struct
+
+    seeds(base: Pubkey):
+        Returns the seeds for the PDA
+
+    find_program_address(program_id: Pubkey, ncn: Pubkey, vault: Pubkey):
+        Find the program address for the NcnVaultTicket account
+    """
 
     discriminator: typing.ClassVar = 6
     ncn: Pubkey
@@ -70,9 +104,9 @@ class NcnVaultTicket:
         return [b"ncn_vault_ticket", bytes(ncn), bytes(vault)]
     
     @staticmethod
-    def find_program_address(program_id: Pubkey, ncn: Pubkey, operator: Pubkey) -> typing.Tuple[Pubkey, int, typing.List[bytes]]:
+    def find_program_address(program_id: Pubkey, ncn: Pubkey, vault: Pubkey) -> typing.Tuple[Pubkey, int, typing.List[bytes]]:
         """Finds the program-derived address (PDA) for the given seeds and program ID."""
-        seeds = NcnVaultTicket.seeds(ncn, operator)
+        seeds = NcnVaultTicket.seeds(ncn, vault)
         
         # Compute PDA and bump using seeds (requires solders Pubkey functionality)
         pda, bump = Pubkey.find_program_address(seeds, program_id)
