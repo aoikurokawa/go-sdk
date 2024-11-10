@@ -1,0 +1,44 @@
+from solana.rpc.api import Client
+from solders.pubkey import Pubkey
+from restakingpy.accounts.restaking.config import Config
+import typing
+
+class RestakingClient:
+    http_client: Client
+    restaking_program_id: Pubkey
+    vault_program_id: Pubkey
+
+    def __init__(self, url: str, restaking_program_id: Pubkey, vault_program_id: Pubkey):
+        self.http_client = Client(url)
+        self.restaking_program_id = restaking_program_id
+        self.vault_program_id = vault_program_id
+
+    def get_restaking_config(self) -> typing.Optional[Config]:
+        config_account_pubkey, _, _ = Config.find_program_address(self.restaking_program_id)
+        print(config_account_pubkey)
+
+        try:
+            response = self.http_client.get_account_info(config_account_pubkey)
+
+            # Check if account data exists
+            # if response['result']['value'] is None:
+            #     print("Account data not found.")
+            #     return None
+            
+            
+            
+            # Deserialize the account data
+            # This assumes `data` in response is base64 encoded; decode and parse as needed
+            print(response)
+            data = response['result']['value']['data'][0]
+            # decoded_data = bytes(data)  # Convert data to bytes, as needed for decoding
+            return None
+            # # Deserialize into Config object (this part depends on how Config is stored)
+            # # For example purposes, assume you have a method in Config to parse raw bytes
+            # config = Config.from_bytes(decoded_data)
+
+            # return config
+        
+        except Exception as e:
+            print("An error occured:", e)
+            return None
