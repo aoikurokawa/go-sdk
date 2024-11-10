@@ -1,7 +1,7 @@
 import typing
 from solders.pubkey import Pubkey
 
-from restakingpy.accounts.slot_toggle import SlotToggle
+from restakingpy.accounts.core.slot_toggle import SlotToggle
 
 # from restakingpy.accounts.slot_toggle import SlotToggle
 
