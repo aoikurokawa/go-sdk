@@ -2,7 +2,14 @@ Restaking Python SDK
 
 # Example
 
-Get Restaking Config
+1. Get Restaking Config
+
 ```
 python examples/get_config.py
+```
+
+2. Get NCN
+
+```
+python examples/get_ncn.py
 ```
