@@ -1,5 +1,6 @@
-from solders.pubkey import Pubkey
 import typing
+
+from solders.pubkey import Pubkey
 
 class Ncn:
     """
@@ -54,10 +55,17 @@ class Ncn:
 
     Methods
     -------
-    says(sound=None)
-        Prints the animals name and what sound it makes
+    deserialize(data: bytes)
+        Deserialize the account data to NCN struct
+
+    seeds(base: Pubkey):
+        Returns the seeds for the PDA
+
+    find_program_address(program_id: Pubkey, base: Pubkey):
+        Find the program address for the NCN account
     """
 
+    discriminator: typing.ClassVar = 1
     base: Pubkey
     admin: Pubkey
     operator_admin: Pubkey

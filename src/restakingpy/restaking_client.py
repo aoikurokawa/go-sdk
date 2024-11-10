@@ -4,6 +4,8 @@ from restakingpy.accounts.restaking.config import Config
 from restakingpy.accounts.restaking.ncn import Ncn
 import typing
 
+from restakingpy.accounts.restaking.ncn_operator_state import NcnOperatorState
+
 class RestakingClient:
     http_client: Client
     restaking_program_id: Pubkey
@@ -59,6 +61,31 @@ class RestakingClient:
             config = Ncn.deserialize(decoded_data)
 
             return config
+        
+        except Exception as e:
+            print("An error occured:", e)
+            return None
+
+    def get_ncn_operator_state(self, ncn_pubkey: Pubkey, operator_pubkey: Pubkey) -> typing.Optional[NcnOperatorState]:
+        try:
+            ncn_operator_state_pubkey, _, _ = NcnOperatorState.find_program_address(self.restaking_program_id, ncn_pubkey, operator_pubkey)
+            response = self.http_client.get_account_info(ncn_operator_state_pubkey)
+
+            # Check if account data exists
+            if response.value is None:
+                print("Account data not found.")
+                return None
+
+            # Deserialize the account data
+            # This assumes `data` in response is base64 encoded; decode and parse as needed
+            data = response.value.data
+            decoded_data = bytes(data)  # Convert data to bytes, as needed for decoding
+
+            # # Deserialize into Config object (this part depends on how Config is stored)
+            # # For example purposes, assume you have a method in Config to parse raw bytes
+            ncn_operator_state = NcnOperatorState.deserialize(decoded_data)
+
+            return ncn_operator_state
         
         except Exception as e:
             print("An error occured:", e)
