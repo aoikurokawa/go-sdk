@@ -1,10 +1,11 @@
 from solders.pubkey import Pubkey
+
 from restakingpy.restaking_client import RestakingClient
 
 RPC_URL = "https://api.devnet.solana.com"
 RESTAKING_PROGRAM_ID = "RestkWeAVL8fRGgzhfeoqFhsqKRchg6aa1XrcH96z4Q"
 VAULT_PROGRAM_ID = "Vau1t6sLNxnzB7ZDsef8TLbPLfyZMYXH8WTNqUdm9g8"
-NCN_PUBKEY = "8gWHpwRmM3K4kAZEZV2jdERBjf1KtKWDc7kHsPpXsgLB"
+NCN_PUBKEY = "3gWkEDrg3DP5pYGfB53ic5HWL8yMWpJJ5Y4WoLuTX4dx"
 
 def main():
     # Replace with your actual config account public key
