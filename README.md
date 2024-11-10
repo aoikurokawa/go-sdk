@@ -23,3 +23,9 @@ python examples/get_config.py
 ```
 python examples/get_ncn.py
 ```
+
+3. Get NcnOperatorState
+
+```
+python examples/get_ncn_operator.py
+```
