@@ -1,4 +1,5 @@
 import typing
+
 from solders.pubkey import Pubkey
 
 class Config:
@@ -41,7 +42,6 @@ class Config:
         offset = 0
         offset += 8
 
-        # Unpack admin and vaultProgram (32 bytes each)
         admin = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
         vault_program = Pubkey.from_bytes(data[offset:offset + 32])

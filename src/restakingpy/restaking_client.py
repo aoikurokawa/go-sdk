@@ -1,10 +1,12 @@
-from solana.rpc.api import Client
-from solders.pubkey import Pubkey
-from restakingpy.accounts.restaking.config import Config
-from restakingpy.accounts.restaking.ncn import Ncn
 import typing
 
+from solana.rpc.api import Client
+from solders.pubkey import Pubkey
+
+from restakingpy.accounts.restaking.config import Config
+from restakingpy.accounts.restaking.ncn import Ncn
 from restakingpy.accounts.restaking.ncn_operator_state import NcnOperatorState
+from restakingpy.accounts.restaking.ncn_vault_ticket import NcnVaultTicket
 
 class RestakingClient:
     http_client: Client
@@ -22,18 +24,13 @@ class RestakingClient:
         try:
             response = self.http_client.get_account_info(config_account_pubkey)
 
-            # Check if account data exists
             if response.value is None:
                 print("Account data not found.")
                 return None
 
-            # Deserialize the account data
-            # This assumes `data` in response is base64 encoded; decode and parse as needed
             data = response.value.data
-            decoded_data = bytes(data)  # Convert data to bytes, as needed for decoding
+            decoded_data = bytes(data)
 
-            # # Deserialize into Config object (this part depends on how Config is stored)
-            # # For example purposes, assume you have a method in Config to parse raw bytes
             config = Config.deserialize(decoded_data)
 
             return config
@@ -46,18 +43,13 @@ class RestakingClient:
         try:
             response = self.http_client.get_account_info(ncn_pubkey)
 
-            # Check if account data exists
             if response.value is None:
                 print("Account data not found.")
                 return None
 
-            # Deserialize the account data
-            # This assumes `data` in response is base64 encoded; decode and parse as needed
             data = response.value.data
-            decoded_data = bytes(data)  # Convert data to bytes, as needed for decoding
+            decoded_data = bytes(data)
 
-            # # Deserialize into Config object (this part depends on how Config is stored)
-            # # For example purposes, assume you have a method in Config to parse raw bytes
             config = Ncn.deserialize(decoded_data)
 
             return config
@@ -67,22 +59,18 @@ class RestakingClient:
             return None
 
     def get_ncn_operator_state(self, ncn_pubkey: Pubkey, operator_pubkey: Pubkey) -> typing.Optional[NcnOperatorState]:
+        ncn_operator_state_pubkey, _, _ = NcnOperatorState.find_program_address(self.restaking_program_id, ncn_pubkey, operator_pubkey)
+
         try:
-            ncn_operator_state_pubkey, _, _ = NcnOperatorState.find_program_address(self.restaking_program_id, ncn_pubkey, operator_pubkey)
             response = self.http_client.get_account_info(ncn_operator_state_pubkey)
 
-            # Check if account data exists
             if response.value is None:
                 print("Account data not found.")
                 return None
 
-            # Deserialize the account data
-            # This assumes `data` in response is base64 encoded; decode and parse as needed
             data = response.value.data
-            decoded_data = bytes(data)  # Convert data to bytes, as needed for decoding
+            decoded_data = bytes(data)
 
-            # # Deserialize into Config object (this part depends on how Config is stored)
-            # # For example purposes, assume you have a method in Config to parse raw bytes
             ncn_operator_state = NcnOperatorState.deserialize(decoded_data)
 
             return ncn_operator_state
@@ -90,3 +78,25 @@ class RestakingClient:
         except Exception as e:
             print("An error occured:", e)
             return None
+
+    def get_ncn_vault_ticket(self, ncn_pubkey: Pubkey, vault_pubkey: Pubkey) -> typing.Optional[NcnVaultTicket]:
+        ncn_vault_ticket_pubkey, _, _ = NcnVaultTicket.find_program_address(self.restaking_program_id, ncn_pubkey, vault_pubkey)
+
+        try:
+            response = self.http_client.get_account_info(ncn_vault_ticket_pubkey)
+
+            if response.value is None:
+                print("Account data not found.")
+                return None
+
+            data = response.value.data
+            decoded_data = bytes(data)
+
+            ncn_vault_ticket = NcnVaultTicket.deserialize(decoded_data)
+
+            return ncn_vault_ticket
+        
+        except Exception as e:
+            print("An error occured:", e)
+            return None
+

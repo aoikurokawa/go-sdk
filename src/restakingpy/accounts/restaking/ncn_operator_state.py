@@ -1,9 +1,8 @@
 import typing
+
 from solders.pubkey import Pubkey
 
 from restakingpy.accounts.core.slot_toggle import SlotToggle
-
-# from restakingpy.accounts.slot_toggle import SlotToggle
 
 class NcnOperatorState:
 
@@ -15,7 +14,7 @@ class NcnOperatorState:
     operator_opt_in_state: SlotToggle
     bump: int
 
-    # Initialize a Config instance with required attributes
+    # Initialize a NcnOperatorState instance with required attributes
     def __init__(self, ncn: Pubkey, operator: Pubkey, index: int, ncn_opt_in_state: SlotToggle, operator_opt_in_state: SlotToggle, bump: int):
         self.ncn = ncn
         self.operator = operator
@@ -45,7 +44,6 @@ class NcnOperatorState:
         offset = 0
         offset += 8
 
-        # Unpack admin and vaultProgram (32 bytes each)
         ncn = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
         operator = Pubkey.from_bytes(data[offset:offset + 32])
