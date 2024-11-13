@@ -82,7 +82,7 @@ class Operator:
     operator_fee_bps: int
     bump: int
 
-    # Initialize a Ncn instance with required attributes
+    # Initialize a Operator instance with required attributes
     def __init__(self, base: Pubkey, admin: Pubkey, ncn_admin: Pubkey, vault_admin: Pubkey, delegate_admin: Pubkey, metadata_admin: Pubkey, voter: Pubkey, index: int, ncn_count: int, vault_count: int, operator_fee_bps: int, bump: int):
         self.base = base
         self.admin = admin

@@ -7,6 +7,7 @@ from restakingpy.accounts.restaking.config import Config
 from restakingpy.accounts.restaking.ncn import Ncn
 from restakingpy.accounts.restaking.ncn_operator_state import NcnOperatorState
 from restakingpy.accounts.restaking.ncn_vault_ticket import NcnVaultTicket
+from restakingpy.accounts.restaking.operator import Operator
 
 class RestakingClient:
     http_client: Client
@@ -34,7 +35,7 @@ class RestakingClient:
             config = Config.deserialize(decoded_data)
 
             return config
-        
+
         except Exception as e:
             print("An error occured:", e)
             return None
@@ -50,10 +51,10 @@ class RestakingClient:
             data = response.value.data
             decoded_data = bytes(data)
 
-            config = Ncn.deserialize(decoded_data)
+            ncn = Ncn.deserialize(decoded_data)
 
-            return config
-        
+            return ncn
+
         except Exception as e:
             print("An error occured:", e)
             return None
@@ -74,7 +75,7 @@ class RestakingClient:
             ncn_operator_state = NcnOperatorState.deserialize(decoded_data)
 
             return ncn_operator_state
-        
+
         except Exception as e:
             print("An error occured:", e)
             return None
@@ -95,7 +96,26 @@ class RestakingClient:
             ncn_vault_ticket = NcnVaultTicket.deserialize(decoded_data)
 
             return ncn_vault_ticket
-        
+
+        except Exception as e:
+            print("An error occured:", e)
+            return None
+
+    def get_operator(self, operator_pubkey: Pubkey) -> typing.Optional[Operator]:
+        try:
+            response = self.http_client.get_account_info(operator_pubkey)
+
+            if response.value is None:
+                print("Account data not found.")
+                return None
+
+            data = response.value.data
+            decoded_data = bytes(data)
+
+            operator = Operator.deserialize(decoded_data)
+
+            return operator
+
         except Exception as e:
             print("An error occured:", e)
             return None
