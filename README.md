@@ -35,3 +35,9 @@ python examples/get_ncn.py
 ```
 python examples/get_ncn_operator.py
 ```
+
+## Resources
+
+```
+source myenv/bin/activate
+```
