@@ -2,52 +2,56 @@ import typing
 
 from solders.pubkey import Pubkey
 
-class Ncn:
+class Operator:
     """
-    The NCN manages the operators, vaults, and slashers associated with a network
+    The Operator account stores global information for a particular operator
+    including the admin, voter, and the number of NCN and vault accounts.
 
     ...
 
     Attributes
     ----------
     base : Pubkey
-        The base account used as a PDA seed
+        The base pubkey used as a seed for the PDA
     
     admin : Pubkey
-        The admin of the NCN
+        The admin pubkey
 
-    operator_admin : Pubkey
-        The operator admin of the NCN
+    ncn_admin : Pubkey
+        The NCN admin can add and remove support for NCNs in the restaking protocol
 
     vault_admin : Pubkey
-        The vault admin of the NCN
+        The vault admin can add and remove support for vaults in the restaking protocol
 
-    slasher_admin : Pubkey
-        The slasher admin of the NCN
+    delegate_admin : Pubkey
+        The delegate admin can delegate assets from the operator
     
     delegate_admin : Pubkey
         The delegate admin of the NCN
 
     metadata_admin : Pubkey
-        ( For future use ) Authority to update the ncn's metadata
+        ( For future use ) Authority to update the operators's metadata
         
     weight_table_admin : Pubkey
-        The weight table admin of the NCN
+        The voter pubkey can be used as the voter for signing transactions for interacting
+        with various NCN programs. NCNs can also opt for their own signing infrastructure.
     
-    ncn_program_admin : Pubkey
+    voter : Pubkey
         Admin in charge of of any on-chain programs related to the NCN
     
     index : int
-        The index of the NCN
+        The operator index
 
-    operator_count : int
-        Number of operator accounts associated with the NCN
+    ncn_count : int
+        The number of NcnOperatorTickets associated with the operator.
+        Helpful for indexing all available OperatorNcnTickets.
 
     vault_count : int
-        Number of vault accounts associated with the NCN
+        The number of NcnVaultTickets associated with the operator.
+        Helpful for indexing all available OperatorVaultTickets.
 
-    slasher_count : int
-        Number of slasher accounts associated with the NCN
+    operator_fee_bps : int
+        The operator fee in basis points
 
     bump : int
         The bump seed for the PDA
@@ -65,37 +69,32 @@ class Ncn:
         Find the program address for the NCN account
     """
 
-    discriminator: typing.ClassVar = 1
+    discriminator: typing.ClassVar = 3
     base: Pubkey
     admin: Pubkey
-    operator_admin: Pubkey
+    ncn_admin: Pubkey
     vault_admin: Pubkey
-    slasher_admin: Pubkey
     delegate_admin: Pubkey
     metadata_admin: Pubkey
-    weight_table_admin: Pubkey
-    ncn_program_admin: Pubkey
     index: int
-    operator_count: int
+    ncn_count: int
     vault_count: int
-    slasher_count: int
+    operator_fee_bps: int
     bump: int
 
-    # Initialize a Ncn instance with required attributes
-    def __init__(self, base: Pubkey, admin: Pubkey, operator_admin: Pubkey, vault_admin: Pubkey, slasher_admin: Pubkey, delegate_admin: Pubkey, metadata_admin: Pubkey, weight_table_admin: Pubkey, ncn_program_admin: Pubkey, index: int, operator_count: int, vault_count: int, slasher_count: int, bump: int):
+    # Initialize a Operator instance with required attributes
+    def __init__(self, base: Pubkey, admin: Pubkey, ncn_admin: Pubkey, vault_admin: Pubkey, delegate_admin: Pubkey, metadata_admin: Pubkey, voter: Pubkey, index: int, ncn_count: int, vault_count: int, operator_fee_bps: int, bump: int):
         self.base = base
         self.admin = admin
-        self.operator_admin = operator_admin
+        self.ncn_admin = ncn_admin
         self.vault_admin = vault_admin
-        self.slasher_admin = slasher_admin
         self.delegate_admin = delegate_admin
         self.metadata_admin = metadata_admin
-        self.weight_table_admin = weight_table_admin
-        self.ncn_program_admin = ncn_program_admin
+        self.voter = voter
         self.index = index
-        self.operator_count = operator_count
+        self.ncn_count = ncn_count
         self.vault_count = vault_count
-        self.slasher_count = slasher_count
+        self.operator_fee_bps = operator_fee_bps
         self.bump = bump
 
     # Display Ncn
@@ -104,24 +103,22 @@ class Ncn:
             f"NCN(\n"
             f"  base={self.base},\n"
             f"  admin={self.admin},\n"
-            f"  operator_admin={self.operator_admin},\n"
+            f"  ncn_admin={self.ncn_admin},\n"
             f"  vault_admin={self.vault_admin},\n"
-            f"  slasher_admin={self.slasher_admin},\n"
             f"  delegate_admin={self.delegate_admin},\n"
             f"  metadata_admin={self.metadata_admin},\n"
-            f"  weight_table_admin={self.weight_table_admin},\n"
-            f"  ncn_program_admin={self.ncn_program_admin},\n"
+            f"  voter={self.voter},\n"
             f"  index={self.index},\n"
-            f"  operator_count={self.operator_count},\n"
+            f"  ncn_count={self.ncn_count},\n"
             f"  vault_count={self.vault_count},\n"
-            f"  slasher_count={self.slasher_count},\n"
+            f"  operator_fee_bps={self.operator_fee_bps},\n"
             f"  bump={self.bump},\n"
             f")"
         )
 
     @staticmethod
-    def deserialize(data: bytes) -> "Ncn":
-        """Deserializes bytes into a Config instance."""
+    def deserialize(data: bytes) -> "Operator":
+        """Deserializes bytes into a Operator instance."""
         
         # Define offsets for each field
         offset = 0
@@ -131,67 +128,56 @@ class Ncn:
         offset += 32
         admin = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
-        operator_admin = Pubkey.from_bytes(data[offset:offset + 32])
+        ncn_admin = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
         vault_admin = Pubkey.from_bytes(data[offset:offset + 32])
-        offset += 32
-        slasher_admin = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
         delegate_admin = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
         metadata_admin = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
-        weight_table_admin = Pubkey.from_bytes(data[offset:offset + 32])
-        offset += 32
-        ncn_program_admin = Pubkey.from_bytes(data[offset:offset + 32])
+        voter = Pubkey.from_bytes(data[offset:offset + 32])
         offset += 32
 
-        # NCN count
         index = int.from_bytes(data[offset:offset + 8], byteorder='little')
         offset += 8
         
-        # Operator count
-        operator_count = int.from_bytes(data[offset:offset + 8], byteorder='little')
+        ncn_count = int.from_bytes(data[offset:offset + 8], byteorder='little')
         offset += 8
 
-        # Vault count
         vault_count = int.from_bytes(data[offset:offset + 8], byteorder='little')
         offset += 8
 
-        # Slasher count
-        slasher_count = int.from_bytes(data[offset:offset + 8], byteorder='little')
-        offset += 8
+        operator_fee_bps = int.from_bytes(data[offset:offset + 2], byteorder='little')
+        offset += 2
 
-        # Bump
         bump = int.from_bytes(data[offset:offset + 1])
 
         # Return a new Config instance with the deserialized data
-        return Ncn(
+        return Operator(
             base,
             admin,
-            operator_admin,
+            ncn_admin,
             vault_admin,
-            slasher_admin,
             delegate_admin,
             metadata_admin,
-            weight_table_admin,
-            ncn_program_admin,
+            voter,
             index,
-            operator_count,
+            ncn_count,
             vault_count,
-            slasher_count,
+            operator_fee_bps,
             bump
         )
 
     @staticmethod
     def seeds(base: Pubkey) -> typing.List[bytes]:
         """Return the seeds used for generating PDA."""
-        return [b"ncn", bytes(base)]
+        return [b"operator", bytes(base)]
     
     @staticmethod
     def find_program_address(program_id: Pubkey, base: Pubkey) -> typing.Tuple[Pubkey, int, typing.List[bytes]]:
         """Finds the program-derived address (PDA) for the given seeds and program ID."""
-        seeds = Ncn.seeds(base)
+        seeds = Operator.seeds(base)
         
         # Compute PDA and bump using seeds (requires solders Pubkey functionality)
         pda, bump = Pubkey.find_program_address(seeds, program_id)
