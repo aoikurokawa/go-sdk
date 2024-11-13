@@ -97,10 +97,10 @@ class Operator:
         self.operator_fee_bps = operator_fee_bps
         self.bump = bump
 
-    # Display Ncn
+    # Display Operator
     def __str__(self):
         return (
-            f"NCN(\n"
+            f"Operator(\n"
             f"  base={self.base},\n"
             f"  admin={self.admin},\n"
             f"  ncn_admin={self.ncn_admin},\n"

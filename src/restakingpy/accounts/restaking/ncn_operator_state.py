@@ -23,7 +23,7 @@ class NcnOperatorState:
         self.operator_opt_in_state = operator_opt_in_state
         self.bump = bump
 
-    # Display Config
+    # Display NcnOperatorState
     def __str__(self):
         return (
             f"NcnOperatorState(\n"
