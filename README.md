@@ -16,6 +16,10 @@
 
 6. OperatorVaultTicket
 
+### Vault
+
+1. Config
+
 ## Example
 
 1. Get Restaking Config
